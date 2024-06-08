@@ -70,11 +70,11 @@ while playing:
         main_display.blit(enemy[0], enemy[1])
 
 
-    #enemy_rect = enemy_rect.move(enemy_move)
     main_display.blit(player, player_rect)
 
-    #main_display.blit(enemy, enemy_rect)
-
-    print(len(enemies))
     pygame.display.flip()
-   
+
+
+    for enemy in enemies:
+        if enemy[1].left < 0: 
+            enemies.pop(enemies.index(enemy))
