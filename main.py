@@ -2,22 +2,22 @@ import pygame
 from pygame.locals import QUIT, K_DOWN, K_UP, K_RIGHT, K_LEFT
 import random
 
-
 pygame.init()
 
 FPS = pygame.time.Clock()
 
 HEIGHT = 800
 WIDTH = 1200
+
 COLOR_PLAYER = (245, 118, 181)
-COLOR_BACHGROUND = (33, 12, 22)
+COLOR_BACKGROUND = (33, 12, 22)
 COLOR_ENEMY = (118, 148, 245)
+COLOR_BONUS = (240, 223, 146)
 
 main_display = pygame.display.set_mode((WIDTH, HEIGHT))
+
 player_size = (20, 20)
-
 player = pygame.Surface(player_size)
-
 player.fill(COLOR_PLAYER)
 
 player_rect = player.get_rect()
@@ -26,6 +26,13 @@ player_move_right = [1, 0]
 player_move_up = [0, -1]
 player_move_left = [-1, 0]
 
+def create_bonus():
+    bonus_size = (30, 30)
+    bonus = pygame.Surface(bonus_size)
+    bonus.fill(COLOR_BONUS)
+    bonus_rect = pygame.Rect(random.randint(0, WIDTH -30), 0, *bonus_size)
+    bonus_move = [0, random.randint(1, 10)]
+    return [bonus, bonus_rect, bonus_move]
 
 def create_enemy():
     enemy_size = (30, 30)
@@ -35,27 +42,31 @@ def create_enemy():
     enemy_move = [random.randint(-6, 1), 0]
     return [enemy, enemy_rect, enemy_move]
 
-
-
 CREATE_ENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(CREATE_ENEMY, 1500)
 
+CREATE_BONUS = pygame.USEREVENT + 2
+pygame.time.set_timer(CREATE_BONUS, 1500)
+
 enemies = []
+bonuses = []
 
 playing = True 
+
 while playing:
-
     FPS.tick(120)
-
     for event in pygame.event.get():
         if event.type == QUIT:
             playing = False
         if event.type == CREATE_ENEMY:
             enemies.append(create_enemy())
+        if event.type == CREATE_BONUS:
+            bonuses.append(create_bonus())
 
-    main_display.fill(COLOR_BACHGROUND)   
+    main_display.fill(COLOR_BACKGROUND)   
 
     keys = pygame.key.get_pressed()
+
     if keys[K_DOWN] and player_rect.bottom < HEIGHT:
         player_rect = player_rect.move(player_move_down)
     if keys[K_RIGHT] and player_rect.right < WIDTH:
@@ -69,12 +80,18 @@ while playing:
         enemy[1] = enemy[1].move(enemy[2])
         main_display.blit(enemy[0], enemy[1])
 
+    for bonus in bonuses:
+        bonus[1] = bonus[1].move(bonus[2])
+        main_display.blit(bonus[0], bonus[1])
 
     main_display.blit(player, player_rect)
 
     pygame.display.flip()
 
-
     for enemy in enemies:
         if enemy[1].left < 0: 
             enemies.pop(enemies.index(enemy))
+            
+    for bonus in bonuses:
+        if bonus[1].bottom > HEIGHT:
+            bonuses.pop(bonuses.index(bonus))
