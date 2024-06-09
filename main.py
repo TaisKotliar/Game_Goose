@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import QUIT, K_DOWN, K_UP, K_RIGHT, K_LEFT
 import random
+import os
 
 pygame.init()
 
@@ -23,10 +24,12 @@ bg_X1 = 0
 bg_X2 = bg.get_width()
 bg_move = 2
 
+IMAGE_PATH = "ANIMATION"
+PLAYER_IMAGES = os.listdir(IMAGE_PATH)
+
 player = pygame.image.load('player.png').convert_alpha()
 player_rect = player.get_rect()
 player_rect.centery = (HEIGHT / 2) - 20
-
 player_move_down = [0, 3]
 player_move_right = [3, 0]
 player_move_up = [0, -3]
@@ -48,20 +51,22 @@ def create_enemy():
 
 CREATE_ENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(CREATE_ENEMY, 1500)
-
 CREATE_BONUS = pygame.USEREVENT + 2
 pygame.time.set_timer(CREATE_BONUS, 1500)
+CHANGE_IMAGE = pygame.USEREVENT + 3
+pygame.time.set_timer(CHANGE_IMAGE, 200)
 
 enemies = []
 bonuses = []
 
 score = 0
 
+image_index = 0
+
 playing = True 
 
 while playing:
     FPS.tick(120)
-
     for event in pygame.event.get():
         if event.type == QUIT:
             playing = False
@@ -69,22 +74,25 @@ while playing:
             enemies.append(create_enemy())
         if event.type == CREATE_BONUS:
             bonuses.append(create_bonus())
+        if event.type == CHANGE_IMAGE:
+            player = pygame.image.load(os.path.join(IMAGE_PATH, PLAYER_IMAGES[image_index]))
+            image_index += 1
+            if image_index >= len(PLAYER_IMAGES):
+                image_index = 0
 
-    #main_display.fill(COLOR_BACKGROUND)   
     bg_X1 -= bg_move
     bg_X2 -= bg_move
 
     if bg_X1 < -bg.get_width():
-        bg_X1 = bg.get_width()
-        
+        bg_X1 = bg.get_width()     
     if bg_X2 < -bg.get_width():
         bg_X2 = bg.get_width()
 
     main_display.blit(bg, (bg_X1, 0))
     main_display.blit(bg, (bg_X2, 0))
-
+    
     keys = pygame.key.get_pressed()
-
+    
     if keys[K_DOWN] and player_rect.bottom < HEIGHT:
         player_rect = player_rect.move(player_move_down)
     if keys[K_RIGHT] and player_rect.right < WIDTH:
