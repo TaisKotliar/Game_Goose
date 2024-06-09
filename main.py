@@ -18,6 +18,8 @@ COLOR_BONUS = (240, 223, 146)
 
 main_display = pygame.display.set_mode((WIDTH, HEIGHT))
 
+bg = pygame.transform.scale(pygame.image.load('background.png'), (WIDTH, HEIGHT))
+
 player_size = (20, 20)
 player = pygame.Surface(player_size)
 player.fill(COLOR_PLAYER)
@@ -33,7 +35,7 @@ def create_bonus():
     bonus = pygame.Surface(bonus_size)
     bonus.fill(COLOR_BONUS)
     bonus_rect = pygame.Rect(random.randint(0, WIDTH -30), 0, *bonus_size)
-    bonus_move = [0, random.randint(1, 10)]
+    bonus_move = [0, random.randint(1, 3)]
     return [bonus, bonus_rect, bonus_move]
 
 def create_enemy():
@@ -59,6 +61,7 @@ playing = True
 
 while playing:
     FPS.tick(120)
+
     for event in pygame.event.get():
         if event.type == QUIT:
             playing = False
@@ -67,7 +70,8 @@ while playing:
         if event.type == CREATE_BONUS:
             bonuses.append(create_bonus())
 
-    main_display.fill(COLOR_BACKGROUND)   
+    #main_display.fill(COLOR_BACKGROUND)   
+    main_display.blit(bg, (0, 0))
 
     keys = pygame.key.get_pressed()
 
@@ -92,6 +96,7 @@ while playing:
         main_display.blit(bonus[0], bonus[1])
 
         if player_rect.colliderect(bonus[1]):
+            score += 1
             bonuses.pop(bonuses.index(bonus))
 
     main_display.blit(FONT.render(str(score), True, COLOR_PLAYER), (WIDTH - 50, 20))
