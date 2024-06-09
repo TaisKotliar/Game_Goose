@@ -3,6 +3,10 @@ from pygame.locals import QUIT, K_DOWN, K_UP, K_RIGHT, K_LEFT
 import random
 import os
 
+pygame.mixer.init()
+pygame.mixer.music.load("Kosaky.mp3") 
+pygame.mixer.music.play(-1,0.0)
+
 pygame.init()
 
 FPS = pygame.time.Clock()
