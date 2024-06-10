@@ -17,9 +17,6 @@ WIDTH = 1200
 FONT = pygame.font.SysFont('Verdana', 50)
 
 COLOR_PLAYER = (245, 118, 181)
-COLOR_BACKGROUND = (33, 12, 22)
-COLOR_ENEMY = (118, 148, 245)
-COLOR_BONUS = (240, 223, 146)
 
 main_display = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -121,7 +118,7 @@ while playing:
             score += 1
             bonuses.pop(bonuses.index(bonus))
 
-    main_display.blit(FONT.render(str(score), True, COLOR_PLAYER), (WIDTH - 50, 20))
+    main_display.blit(FONT.render(str(score), True, COLOR_PLAYER), (WIDTH - 80, 20))
     main_display.blit(player, player_rect)
 
     pygame.display.flip()
