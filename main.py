@@ -2,9 +2,26 @@ import pygame
 from pygame.locals import QUIT, K_DOWN, K_UP, K_RIGHT, K_LEFT
 import random
 import os
+import sys
+"""
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+"""
+
+def resource_path(relative_path):
+    base_path = getattr(
+        sys,
+        '_MEIPASS',
+        os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
 
 pygame.mixer.init()
-pygame.mixer.music.load("AUDIO/Kosaky.mp3") 
+pygame.mixer.music.load(resource_path("AUDIO/Kosaky.mp3"))
 pygame.mixer.music.play(-1,0.0)
 
 pygame.init()
@@ -20,15 +37,15 @@ COLOR_SCORE = (117, 150, 240)
 
 main_display = pygame.display.set_mode((WIDTH, HEIGHT))
 
-bg = pygame.transform.scale(pygame.image.load("IMG/background.png"), (WIDTH, HEIGHT))
+bg = pygame.transform.scale(pygame.image.load(resource_path("IMG/background.png")), (WIDTH, HEIGHT))
 bg_X1 = 0
 bg_X2 = bg.get_width()
 bg_move = 2
 
-IMAGE_PATH = "ANIMATION"
+IMAGE_PATH = resource_path("ANIMATION")
 PLAYER_IMAGES = os.listdir(IMAGE_PATH)
 
-player = pygame.image.load("IMG/player.png").convert_alpha()
+player = pygame.image.load(resource_path("IMG/player.png")).convert_alpha()
 player_rect = player.get_rect()
 player_rect.centery = (HEIGHT / 2) - 20
 player_move_down = [0, 3]
@@ -37,14 +54,14 @@ player_move_up = [0, -3]
 player_move_left = [-3, 0]
 
 def create_bonus():
-    bonus = pygame.image.load("IMG/bonus.png").convert_alpha()
+    bonus = pygame.image.load(resource_path("IMG/bonus.png")).convert_alpha()
     bonus_size = bonus.get_size()
     bonus_rect = pygame.Rect(random.randint(0, WIDTH - bonus.get_width()), -bonus.get_height(), *bonus_size)
     bonus_move = [0, random.randint(2, 6)]
     return [bonus, bonus_rect, bonus_move]
 
 def create_enemy():
-    enemy = pygame.image.load("IMG/enemy.png").convert_alpha()
+    enemy = pygame.image.load(resource_path("IMG/enemy.png")).convert_alpha()
     enemy_size = enemy.get_size()
     enemy_rect = pygame.Rect(WIDTH + enemy.get_width(), random.randint(0, HEIGHT - enemy.get_height()), *enemy_size)
     enemy_move = [random.randint(-8, -4), 0]
