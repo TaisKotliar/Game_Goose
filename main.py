@@ -4,7 +4,7 @@ import random
 import os
 
 pygame.mixer.init()
-pygame.mixer.music.load("Kosaky.mp3") 
+pygame.mixer.music.load("AUDIO/Kosaky.mp3") 
 pygame.mixer.music.play(-1,0.0)
 
 pygame.init()
@@ -16,11 +16,11 @@ WIDTH = 1200
 
 FONT = pygame.font.SysFont('Verdana', 50)
 
-COLOR_PLAYER = (245, 118, 181)
+COLOR_SCORE = (117, 150, 240)
 
 main_display = pygame.display.set_mode((WIDTH, HEIGHT))
 
-bg = pygame.transform.scale(pygame.image.load('background.png'), (WIDTH, HEIGHT))
+bg = pygame.transform.scale(pygame.image.load("IMG/background.png"), (WIDTH, HEIGHT))
 bg_X1 = 0
 bg_X2 = bg.get_width()
 bg_move = 2
@@ -28,7 +28,7 @@ bg_move = 2
 IMAGE_PATH = "ANIMATION"
 PLAYER_IMAGES = os.listdir(IMAGE_PATH)
 
-player = pygame.image.load('player.png').convert_alpha()
+player = pygame.image.load("IMG/player.png").convert_alpha()
 player_rect = player.get_rect()
 player_rect.centery = (HEIGHT / 2) - 20
 player_move_down = [0, 3]
@@ -37,14 +37,14 @@ player_move_up = [0, -3]
 player_move_left = [-3, 0]
 
 def create_bonus():
-    bonus = pygame.image.load('bonus.png').convert_alpha()
+    bonus = pygame.image.load("IMG/bonus.png").convert_alpha()
     bonus_size = bonus.get_size()
     bonus_rect = pygame.Rect(random.randint(0, WIDTH - bonus.get_width()), -bonus.get_height(), *bonus_size)
     bonus_move = [0, random.randint(2, 6)]
     return [bonus, bonus_rect, bonus_move]
 
 def create_enemy():
-    enemy = pygame.image.load('enemy.png').convert_alpha()
+    enemy = pygame.image.load("IMG/enemy.png").convert_alpha()
     enemy_size = enemy.get_size()
     enemy_rect = pygame.Rect(WIDTH + enemy.get_width(), random.randint(0, HEIGHT - enemy.get_height()), *enemy_size)
     enemy_move = [random.randint(-8, -4), 0]
@@ -118,7 +118,7 @@ while playing:
             score += 1
             bonuses.pop(bonuses.index(bonus))
 
-    main_display.blit(FONT.render(str(score), True, COLOR_PLAYER), (WIDTH - 80, 20))
+    main_display.blit(FONT.render(str(score), True, COLOR_SCORE), (WIDTH - 80, 20))
     main_display.blit(player, player_rect)
 
     pygame.display.flip()
